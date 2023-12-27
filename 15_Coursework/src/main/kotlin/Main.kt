@@ -9,17 +9,7 @@ fun main() {
     runBlocking {
         val cargoLoadPoint1 = launch {
             println("Truck is coming...")
-            Depot.flow.collect {
-                if (it.goodsList.isNotEmpty()) it.unloading()
-                else {
-                    val i = Random.nextInt(0, 4)
-                    while (it.weight < it.maxWeight) {
-                        if (i == 0) it.addGoods(edibleProducts[Random.nextInt(0, 4)])
-                        else it.addGoods(notEdibleProducts[Random.nextInt(0, 11)])
-                    }
-                }
-                cancel()
-            }
+
         }
     }
 }
