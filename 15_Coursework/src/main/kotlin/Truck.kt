@@ -8,10 +8,10 @@ abstract class Truck(var maxWeight: Int, var name: String, var isEmpty: Boolean 
         if (g.weight <= maxWeight - weight) {
             goodsList.add(g)
             delay(g.time.toLong())
-            println("${g.name} added to $name!")
+            println("${g.goodName} added to $name!")
             weight += g.weight
             println("Total weight $weight")
-        } else println("${g.name} cannot fit!")
+        } else println("${g.goodName} cannot fit!")
     }
 
     fun loading(g: Goods) {
@@ -24,7 +24,7 @@ abstract class Truck(var maxWeight: Int, var name: String, var isEmpty: Boolean 
 
     suspend fun unloading() {
         while (goodsList.isNotEmpty()) {
-            println("${goodsList[0].name} unloading from $name!")
+            println("${goodsList[0].goodName} unloading from $name!")
             delay(goodsList[0].time.toLong())
             if (goodsList[0].isEatable) Warehouse.eatableGoods.add(goodsList[0])
             else Warehouse.notEatableGoods.add(goodsList[0])
