@@ -4,14 +4,16 @@ abstract class Truck(var maxWeight: Int, var name: String, var isEmpty: Boolean 
 
     var goodsList = mutableListOf<Goods>()
 
-    suspend fun addGoods(g: Goods) {
+    suspend fun addGoods(g: Goods, isEatable: Boolean) {
         if (g.weight <= maxWeight - weight) {
             goodsList.add(g)
             delay(g.time.toLong())
             println("${g.goodName} added to $name!")
             weight += g.weight
             println("Total weight $weight")
-        } else println("${g.goodName} cannot fit!")
+            if (isEatable) Warehouse.eatableGoods.removeAt(0)
+            else Warehouse.notEatableGoods.removeAt(0)
+        }
     }
 
     fun loading(g: Goods) {
@@ -28,7 +30,9 @@ abstract class Truck(var maxWeight: Int, var name: String, var isEmpty: Boolean 
             delay(goodsList[0].time.toLong())
             if (goodsList[0].isEatable) Warehouse.eatableGoods.add(goodsList[0])
             else Warehouse.notEatableGoods.add(goodsList[0])
+            weight -= goodsList[0].weight
             goodsList.removeAt(0)
+            println("Weight is - $weight")
         }
         println("$name is Empty!")
     }

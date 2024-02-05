@@ -8,20 +8,21 @@ object Depot {
     val flow = flow {
         while (currentCoroutineContext().isActive) {
             val truck: Truck
-            when (Random.nextInt(1, 16)) {
-                1 -> {
+//            when (Random.nextInt(1, 16)) {
+            when (Random.nextInt(1, 25)) {
+                1,17,18,19,20 -> {
                     truck = SmallTruck()
                     truck.isEmpty = true
                     smallTruckCount++
                     println("${truck.name} is empty and ready to load!")
                 }
-                2 -> {
+                2,21,22 -> {
                     truck = MediumTruck()
                     truck.isEmpty = true
                     mediumTruckCount++
                     println("${truck.name} is empty and ready to load!")
                 }
-                3 -> {
+                3,23,24 -> {
                     truck = BigTruck()
                     truck.isEmpty = true
                     bigTruckCount++

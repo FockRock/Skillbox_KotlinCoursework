@@ -6,6 +6,7 @@ fun main() {
     runBlocking {
         val cargoLoadPoint1 = launch {
             println("Truck is coming...")
+
             Depot.flow.collect { truck ->
                 println(truck.name)
                 val a = Random.nextInt(2)
@@ -13,22 +14,20 @@ fun main() {
                 else if (a == 0) {
                     if (Warehouse.notEatableGoods.isEmpty()) println("${truck.name} go away with no goods!")
                     else {
-                        while (truck.weight != truck.maxWeight || Warehouse.notEatableGoods.isEmpty()) {
-                            truck.addGoods(Warehouse.notEatableGoods[0])
-                            Warehouse.notEatableGoods.removeAt(0)
-                        }
+                        while (truck.weight < truck.maxWeight && Warehouse.notEatableGoods.isNotEmpty())
+                            truck.addGoods(Warehouse.notEatableGoods[0],false)
                     }
                 } else if (a == 1) {
                     if (Warehouse.eatableGoods.isEmpty()) println("${truck.name} go away with no goods!")
                     else {
-                        while (truck.weight != truck.maxWeight || Warehouse.eatableGoods.isEmpty()) {
-                            truck.addGoods(Warehouse.eatableGoods[0])
-                            Warehouse.eatableGoods.removeAt(0)
-                        }
+                        while (truck.weight < truck.maxWeight && Warehouse.eatableGoods.isNotEmpty())
+                            truck.addGoods(Warehouse.eatableGoods[0],true)
                     }
                 }
-                if (smallTruckCount == 2 || mediumTruckCount == 2 || bigTruckCount == 2) {
+                if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
+                    println("Не съедобные товары на складе:")
                     Warehouse.notEatableGoods.forEach { println(it.goodName) }
+                    println("Съедобные товары на складе:")
                     Warehouse.eatableGoods.forEach { println(it.goodName) }
                     cancel()
                 }
