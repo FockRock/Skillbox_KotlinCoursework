@@ -8,7 +8,6 @@ object Depot {
     val flow = flow {
         while (currentCoroutineContext().isActive) {
             val truck: Truck
-//            when (Random.nextInt(1, 16)) {
             when (Random.nextInt(1, 25)) {
                 1,17,18,19,20 -> {
                     truck = SmallTruck()
