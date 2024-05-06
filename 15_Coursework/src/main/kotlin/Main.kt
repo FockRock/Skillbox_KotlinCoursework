@@ -44,37 +44,6 @@ fun main() {
                 }
                 delay(1000)
             }
-
         }
-
-        val ch = Channel<Int>()
-        launch {
-            for (n in 1..5)
-                ch.send(n)
-        }
-
-        repeat(5) {
-            val number = channel.receive()
-            println(number)
-        }
-        println("End")
     }
 }
-
-//suspend fun main() = coroutineScope{
-//
-//    val channel = Channel<Int>()
-//    launch {
-//        for (n in 1..5) {
-//            // отправляем данные через канал
-//            channel.send(n)
-//        }
-//    }
-//
-//    // получаем данные из канала
-//    repeat(5) {
-//        val number = channel.receive()
-//        println(number)
-//    }
-//    println("End")
-//}
