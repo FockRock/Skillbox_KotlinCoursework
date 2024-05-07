@@ -8,10 +8,8 @@ fun main() {
     runBlocking {
         val scope = CoroutineScope(this.coroutineContext)
         val traffic = mutableListOf<Truck>()
-        val channel = Channel<Int>()
 
-
-        val cargoLoadPoint1 = scope.launch {
+        scope.launch {
 
             Depot.flow.collect { truck ->
                 val a = Random.nextInt(2)
