@@ -20,7 +20,6 @@ abstract class Truck(var maxWeight: Int, var name: String, var isEmpty: Boolean 
         if (g.weight <= maxWeight - weight) {
             goodsList.add(g)
             weight += g.weight
-
         }
     }
 
