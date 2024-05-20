@@ -5,50 +5,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlin.random.Random
 
 fun main() {
-    runBlocking {
-        val scope = CoroutineScope(this.coroutineContext)
-        val traffic = mutableListOf<Truck>()
-        val channel = Channel<Truck>()
+    val channel = Channel<Truck>()
+}
 
-        val job1 = scope.launch {
-
-            Depot.flow.collect { truck ->
-                val a = Random.nextInt(2)
-                if (!truck.isEmpty) truck.unloading()
-                else if (a == 0) {
-                    if (Warehouse.notEatableGoods.isEmpty()) {
-                        println("${truck.name} go to the traffic!")
-                        traffic.add(truck)
-                        channel.send(truck)                                                                             //Разобраться с отправкой в очередь
-
-                    } else {
-                        while (truck.weight < truck.maxWeight && Warehouse.notEatableGoods.isNotEmpty() && Warehouse.notEatableGoods[0].weight < (truck.maxWeight - truck.weight))
-                            truck.addGoods(Warehouse.notEatableGoods[0], false)
-                    }
-                } else if (a == 1) {
-                    if (Warehouse.eatableGoods.isEmpty()) {
-                        println("${truck.name} go to the traffic!")
-                        traffic.add(truck)
-                        channel.send(truck)
-                    } else {
-                        while (truck.weight < truck.maxWeight && Warehouse.eatableGoods.isNotEmpty() && Warehouse.eatableGoods[0].weight < (truck.maxWeight - truck.weight))
-                            truck.addGoods(Warehouse.eatableGoods[0], true)
-                    }
-                }
-                if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
-                    println("Не съедобные товары на складе:")
-                    Warehouse.notEatableGoods.forEach { println(it.goodName) }
-                    println("Съедобные товары на складе:")
-                    Warehouse.eatableGoods.forEach { println(it.goodName) }
-                    println("Машины в очереди:")
-                    traffic.forEach { println(it.name) }
-                    cancel()
-                }
-                delay(1000)
-            }
-        }
-
-//        val job2 = scope.launch {
+//    runBlocking {
+//        val scope = CoroutineScope(this.coroutineContext)
+//        val traffic = mutableListOf<Truck>()
+//
+//        val job1 = scope.launch {
 //
 //            Depot.flow.collect { truck ->
 //                val a = Random.nextInt(2)
@@ -57,6 +21,7 @@ fun main() {
 //                    if (Warehouse.notEatableGoods.isEmpty()) {
 //                        println("${truck.name} go to the traffic!")
 //                        traffic.add(truck)
+//
 //                    } else {
 //                        while (truck.weight < truck.maxWeight && Warehouse.notEatableGoods.isNotEmpty() && Warehouse.notEatableGoods[0].weight < (truck.maxWeight - truck.weight))
 //                            truck.addGoods(Warehouse.notEatableGoods[0], false)
@@ -82,5 +47,5 @@ fun main() {
 //                delay(1000)
 //            }
 //        }
-    }
-}
+//    }
+//}
