@@ -5,10 +5,26 @@ import kotlinx.coroutines.flow.receiveAsFlow
 import kotlin.random.Random
 
 fun main() {
-    val channel = Channel<Truck>()
-}
+    runBlocking {
+        val channel = Channel<Truck>()
 
-//    runBlocking {
+        launch {
+            Depot.flow.collect{
+                channel.send(it)
+            }
+            cancel()
+        }
+        repeat(1){
+            val a = channel.receive()
+            println(a.name)
+        }
+
+
+
+
+
+
+
 //        val scope = CoroutineScope(this.coroutineContext)
 //        val traffic = mutableListOf<Truck>()
 //
@@ -47,5 +63,5 @@ fun main() {
 //                delay(1000)
 //            }
 //        }
-//    }
-//}
+    }
+}
