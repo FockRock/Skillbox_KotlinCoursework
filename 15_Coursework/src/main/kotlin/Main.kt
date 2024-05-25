@@ -7,22 +7,21 @@ import kotlin.random.Random
 fun main() {
     runBlocking {
         val channel = Channel<Truck>()
+        val traffic = mutableListOf<Truck>()
 
         launch {
-            Depot.flow.collect{
+            Depot.flow.collect {
                 channel.send(it)
+                traffic.add(it)
+                if (traffic.size == 2) {
+                    cancel()
+                    channel.close()
+                }
             }
-            cancel()
         }
-        repeat(1){
-            val a = channel.receive()
+        for (a in channel)
             println(a.name)
-        }
-
-
-
-
-
+        println("Done!")
 
 
 //        val scope = CoroutineScope(this.coroutineContext)
