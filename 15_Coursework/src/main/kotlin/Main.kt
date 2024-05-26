@@ -11,9 +11,10 @@ fun main() {
 
         launch {
             Depot.flow.collect {
-                channel.send(it)
                 traffic.add(it)
-                if (traffic.size == 2) {
+                if(it.isEmpty)
+                    channel.send(it)
+                if (traffic.size == 6) {
                     cancel()
                     channel.close()
                 }
@@ -22,6 +23,8 @@ fun main() {
         for (a in channel)
             println(a.name)
         println("Done!")
+
+        //Сделать три корутины с выгрузкой, и одну с загрузкой
 
 
 //        val scope = CoroutineScope(this.coroutineContext)
