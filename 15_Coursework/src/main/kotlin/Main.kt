@@ -9,6 +9,7 @@ fun main() {
         val channel = Channel<Truck>()
         val traffic = mutableListOf<Truck>()
         val scope = CoroutineScope(this.coroutineContext)
+        val loadTraffic = mutableListOf<Truck>()
 
         launch {
             Depot.flow.collect {
@@ -22,7 +23,11 @@ fun main() {
             }
         }
         for (a in channel)
-            println(a.name)
+            loadTraffic.add(a)
+        println("List of trucks in line:")
+        loadTraffic.forEach {
+            println(it.name)
+        }
         println("Done!")
 
         //Сделать три корутины с выгрузкой, и одну с загрузкой
