@@ -68,12 +68,21 @@ fun main() {
                 delay(1000)
             }
         }
-        for (a in channel)
-            loadTraffic.add(a)
-        println("List of trucks in line:")
-        loadTraffic.forEach {
-            println(it.name)
+        val job2 = launch {
+            for (a in channel)
+                loadTraffic.add(a)
+            println("List of trucks in line:")
+            loadTraffic.forEach {
+                println(it.name)
+            }
+            println("Done!")
         }
-        println("Done!")
+//        for (a in channel)
+//            loadTraffic.add(a)
+//        println("List of trucks in line:")
+//        loadTraffic.forEach {
+//            println(it.name)
+//        }
+//        println("Done!")
     }
 }
