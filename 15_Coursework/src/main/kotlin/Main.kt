@@ -1,7 +1,6 @@
 import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlin.random.Random
 
 fun main() {
@@ -9,12 +8,10 @@ fun main() {
         val scope = CoroutineScope(this.coroutineContext)
         val loadTraffic = mutableListOf<Truck>()
 
-        //Сделать три корутины с выгрузкой, и одну с загрузкой
-
-        val job1 = scope.launch {
+        val unloadPoint1 = scope.launch {
 
             Depot.flow.collect { truck ->
-                if (!truck.isEmpty) truck.unloading() else loadFun(truck)
+                if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
                 delay(1000)
 
                 if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
@@ -28,24 +25,41 @@ fun main() {
             }
         }
 
-        val job2 = scope.launch {
+//        val unloadPoint2 = scope.launch {
+//
+//            Depot.flow.collect { truck ->
+//                if (!truck.isEmpty) truck.unloading() else loadFun(truck)
+//                delay(1000)
+//
+//                if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
+//                    println("Не съедобные товары на складе:")
+//                    Warehouse.notEatableGoods.forEach { println(it.goodName) }
+//                    println("Съедобные товары на складе:")
+//                    Warehouse.eatableGoods.forEach { println(it.goodName) }
+//                    channel.close()
+//                    cancel()
+//                }
+//            }
+//        }
+//
+//        val unloadPoint3 = scope.launch {
+//
+//            Depot.flow.collect { truck ->
+//                if (!truck.isEmpty) truck.unloading() else loadFun(truck)
+//                delay(1000)
+//
+//                if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
+//                    println("Не съедобные товары на складе:")
+//                    Warehouse.notEatableGoods.forEach { println(it.goodName) }
+//                    println("Съедобные товары на складе:")
+//                    Warehouse.eatableGoods.forEach { println(it.goodName) }
+//                    channel.close()
+//                    cancel()
+//                }
+//            }
+//        }
 
-            Depot.flow.collect { truck ->
-                if (!truck.isEmpty) truck.unloading() else loadFun(truck)
-                delay(1000)
-
-                if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
-                    println("Не съедобные товары на складе:")
-                    Warehouse.notEatableGoods.forEach { println(it.goodName) }
-                    println("Съедобные товары на складе:")
-                    Warehouse.eatableGoods.forEach { println(it.goodName) }
-                    channel.close()
-                    cancel()
-                }
-            }
-        }
-
-        val job3 = launch {
+        val loadPoint = launch {
             for (a in channel)
                 loadTraffic.add(a)
             println("List of trucks in line:")
@@ -60,7 +74,7 @@ fun main() {
 
 val channel = Channel<Truck>()
 val traffic = mutableListOf<Truck>()
-suspend fun loadFun(t: Truck){
+suspend fun loadTruck(t: Truck){
     val a = Random.nextInt(2)
     if (a == 0) {
         if (Warehouse.notEatableGoods.isEmpty()) {
