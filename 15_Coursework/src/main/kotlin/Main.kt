@@ -11,7 +11,7 @@ fun main() {
         val unloadPoint1 = scope.launch {
 
             Depot.flow.collect { truck ->
-                if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
+                if (!truck.isEmpty) truck.unloading() else unloadTruck(truck)
                 delay(1000)
 
                 if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
@@ -74,7 +74,7 @@ fun main() {
 
 val channel = Channel<Truck>()
 val traffic = mutableListOf<Truck>()
-suspend fun loadTruck(t: Truck){
+suspend fun unloadTruck(t: Truck){
     val a = Random.nextInt(2)
     if (a == 0) {
         if (Warehouse.notEatableGoods.isEmpty()) {
@@ -82,6 +82,7 @@ suspend fun loadTruck(t: Truck){
             traffic.add(t)
             channel.send(t)
         } else {
+
             while (t.weight < t.maxWeight && Warehouse.notEatableGoods.isNotEmpty() && Warehouse.notEatableGoods[0].weight < (t.maxWeight - t.weight))
                 t.addGoods(Warehouse.notEatableGoods[0], false)
         }
