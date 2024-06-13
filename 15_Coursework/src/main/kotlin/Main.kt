@@ -11,7 +11,8 @@ fun main() {
         val unloadPoint1 = scope.launch {
 
             Depot.flow.collect { truck ->
-                if (!truck.isEmpty) truck.unloading() else unloadTruck(truck)
+                println("ЕДЕМ К ПУНКТУ РАЗГРУЗКИ 1")
+                if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
                 delay(1000)
 
                 if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
@@ -25,39 +26,41 @@ fun main() {
             }
         }
 
-//        val unloadPoint2 = scope.launch {
-//
-//            Depot.flow.collect { truck ->
-//                if (!truck.isEmpty) truck.unloading() else loadFun(truck)
-//                delay(1000)
-//
-//                if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
-//                    println("Не съедобные товары на складе:")
-//                    Warehouse.notEatableGoods.forEach { println(it.goodName) }
-//                    println("Съедобные товары на складе:")
-//                    Warehouse.eatableGoods.forEach { println(it.goodName) }
-//                    channel.close()
-//                    cancel()
-//                }
-//            }
-//        }
-//
-//        val unloadPoint3 = scope.launch {
-//
-//            Depot.flow.collect { truck ->
-//                if (!truck.isEmpty) truck.unloading() else loadFun(truck)
-//                delay(1000)
-//
-//                if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
-//                    println("Не съедобные товары на складе:")
-//                    Warehouse.notEatableGoods.forEach { println(it.goodName) }
-//                    println("Съедобные товары на складе:")
-//                    Warehouse.eatableGoods.forEach { println(it.goodName) }
-//                    channel.close()
-//                    cancel()
-//                }
-//            }
-//        }
+        val unloadPoint2 = scope.launch {
+
+            Depot.flow.collect { truck ->
+                println("ЕДЕМ К ПУНКТУ РАЗГРУЗКИ 2")
+                if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
+                delay(1000)
+
+                if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
+                    println("Не съедобные товары на складе:")
+                    Warehouse.notEatableGoods.forEach { println(it.goodName) }
+                    println("Съедобные товары на складе:")
+                    Warehouse.eatableGoods.forEach { println(it.goodName) }
+                    channel.close()
+                    cancel()
+                }
+            }
+        }
+
+        val unloadPoint3 = scope.launch {
+
+            Depot.flow.collect { truck ->
+                println("ЕДЕМ К ПУНКТУ РАЗГРУЗКИ 3")
+                if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
+                delay(1000)
+
+                if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
+                    println("Не съедобные товары на складе:")
+                    Warehouse.notEatableGoods.forEach { println(it.goodName) }
+                    println("Съедобные товары на складе:")
+                    Warehouse.eatableGoods.forEach { println(it.goodName) }
+                    channel.close()
+                    cancel()
+                }
+            }
+        }
 
         val loadPoint = launch {
             for (a in channel)
@@ -74,7 +77,7 @@ fun main() {
 
 val channel = Channel<Truck>()
 val traffic = mutableListOf<Truck>()
-suspend fun unloadTruck(t: Truck){
+suspend fun loadTruck(t: Truck){
     val a = Random.nextInt(2)
     if (a == 0) {
         if (Warehouse.notEatableGoods.isEmpty()) {
@@ -82,7 +85,6 @@ suspend fun unloadTruck(t: Truck){
             traffic.add(t)
             channel.send(t)
         } else {
-
             while (t.weight < t.maxWeight && Warehouse.notEatableGoods.isNotEmpty() && Warehouse.notEatableGoods[0].weight < (t.maxWeight - t.weight))
                 t.addGoods(Warehouse.notEatableGoods[0], false)
         }
