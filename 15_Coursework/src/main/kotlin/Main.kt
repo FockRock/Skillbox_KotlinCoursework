@@ -14,15 +14,7 @@ fun main() {
                 println("ЕДЕМ К ПУНКТУ РАЗГРУЗКИ 1")
                 if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
                 delay(1000)
-
-                if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
-                    println("Не съедобные товары на складе:")
-                    Warehouse.notEatableGoods.forEach { println(it.goodName) }
-                    println("Съедобные товары на складе:")
-                    Warehouse.eatableGoods.forEach { println(it.goodName) }
-                    channel.close()
-                    cancel()
-                }
+                if (check()) cancel()
             }
         }
 
@@ -32,15 +24,7 @@ fun main() {
                 println("ЕДЕМ К ПУНКТУ РАЗГРУЗКИ 2")
                 if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
                 delay(1000)
-
-                if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
-                    println("Не съедобные товары на складе:")
-                    Warehouse.notEatableGoods.forEach { println(it.goodName) }
-                    println("Съедобные товары на складе:")
-                    Warehouse.eatableGoods.forEach { println(it.goodName) }
-                    channel.close()
-                    cancel()
-                }
+                if (check()) cancel()
             }
         }
 
@@ -50,15 +34,7 @@ fun main() {
                 println("ЕДЕМ К ПУНКТУ РАЗГРУЗКИ 3")
                 if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
                 delay(1000)
-
-                if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
-                    println("Не съедобные товары на складе:")
-                    Warehouse.notEatableGoods.forEach { println(it.goodName) }
-                    println("Съедобные товары на складе:")
-                    Warehouse.eatableGoods.forEach { println(it.goodName) }
-                    channel.close()
-                    cancel()
-                }
+                if (check()) cancel()
             }
         }
 
@@ -77,7 +53,7 @@ fun main() {
 
 val channel = Channel<Truck>()
 val traffic = mutableListOf<Truck>()
-suspend fun loadTruck(t: Truck){
+suspend fun loadTruck(t: Truck) {
     val a = Random.nextInt(2)
     if (a == 0) {
         if (Warehouse.notEatableGoods.isEmpty()) {
@@ -98,4 +74,16 @@ suspend fun loadTruck(t: Truck){
                 t.addGoods(Warehouse.eatableGoods[0], true)
         }
     }
+}
+
+suspend fun check(): Boolean {
+    val a = if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
+        println("Не съедобные товары на складе:")
+        Warehouse.notEatableGoods.forEach { println(it.goodName) }
+        println("Съедобные товары на складе:")
+        Warehouse.eatableGoods.forEach { println(it.goodName) }
+        channel.close()
+        true
+    } else false
+    return a
 }
