@@ -2,14 +2,12 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlin.random.Random
-
 fun main() {
     runBlocking {
         val scope = CoroutineScope(this.coroutineContext)
         val loadTraffic = mutableListOf<Truck>()
 
         val unloadPoint1 = scope.launch {
-
             Depot.flow.collect { truck ->
                 println("ЕДЕМ К ПУНКТУ РАЗГРУЗКИ 1")
                 if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
@@ -19,7 +17,6 @@ fun main() {
         }
 
         val unloadPoint2 = scope.launch {
-
             Depot.flow.collect { truck ->
                 println("ЕДЕМ К ПУНКТУ РАЗГРУЗКИ 2")
                 if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
@@ -29,7 +26,6 @@ fun main() {
         }
 
         val unloadPoint3 = scope.launch {
-
             Depot.flow.collect { truck ->
                 println("ЕДЕМ К ПУНКТУ РАЗГРУЗКИ 3")
                 if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
@@ -76,7 +72,7 @@ suspend fun loadTruck(t: Truck) {
     }
 }
 
-suspend fun check(): Boolean {
+fun check(): Boolean {
     val a = if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
         println("Не съедобные товары на складе:")
         Warehouse.notEatableGoods.forEach { println(it.goodName) }
