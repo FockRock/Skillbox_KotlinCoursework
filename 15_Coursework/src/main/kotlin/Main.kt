@@ -2,6 +2,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.collect
 import kotlin.random.Random
+
 fun main() {
     runBlocking {
         val scope = CoroutineScope(this.coroutineContext)
@@ -9,8 +10,9 @@ fun main() {
 
         val unloadPoint1 = scope.launch {
             Depot.flow.collect { truck ->
-                println("ЕДЕМ К ПУНКТУ РАЗГРУЗКИ 1")
-                if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
+                val name = "Unload point 1"
+                println("Go to the $name")
+                if (!truck.isEmpty) truck.unloading() else loadTruck(truck, name)
                 delay(1000)
                 if (check()) cancel()
             }
@@ -18,8 +20,9 @@ fun main() {
 
         val unloadPoint2 = scope.launch {
             Depot.flow.collect { truck ->
-                println("ЕДЕМ К ПУНКТУ РАЗГРУЗКИ 2")
-                if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
+                val name = "Unload point 2"
+                println("Go to the $name")
+                if (!truck.isEmpty) truck.unloading() else loadTruck(truck, name)
                 delay(1000)
                 if (check()) cancel()
             }
@@ -27,8 +30,9 @@ fun main() {
 
         val unloadPoint3 = scope.launch {
             Depot.flow.collect { truck ->
-                println("ЕДЕМ К ПУНКТУ РАЗГРУЗКИ 3")
-                if (!truck.isEmpty) truck.unloading() else loadTruck(truck)
+                val name = "Unload point 3"
+                println("Go to the $name")
+                if (!truck.isEmpty) truck.unloading() else loadTruck(truck, name)
                 delay(1000)
                 if (check()) cancel()
             }
@@ -49,11 +53,11 @@ fun main() {
 
 val channel = Channel<Truck>()
 val traffic = mutableListOf<Truck>()
-suspend fun loadTruck(t: Truck) {
+suspend fun loadTruck(t: Truck, n: String) {
     val a = Random.nextInt(2)
     if (a == 0) {
         if (Warehouse.notEatableGoods.isEmpty()) {
-            println("${t.name} go to the traffic!")
+            println("Go from the $n ${t.name} go to the traffic!")
             traffic.add(t)
             channel.send(t)
         } else {
@@ -62,7 +66,7 @@ suspend fun loadTruck(t: Truck) {
         }
     } else if (a == 1) {
         if (Warehouse.eatableGoods.isEmpty()) {
-            println("${t.name} go to the traffic!")
+            println("Go from the $n ${t.name} go to the traffic!")
             traffic.add(t)
             channel.send(t)
         } else {
