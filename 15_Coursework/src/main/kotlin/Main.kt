@@ -18,25 +18,25 @@ fun main() {
             }
         }
 
-        val unloadPoint2 = scope.launch {
-            Depot.flow.collect { truck ->
-                val name = "Unload point 2"
-                println("Go to the $name")
-                if (!truck.isEmpty) truck.unloading() else loadTruck(truck, name)
-                delay(1000)
-                if (check()) cancel()
-            }
-        }
-
-        val unloadPoint3 = scope.launch {
-            Depot.flow.collect { truck ->
-                val name = "Unload point 3"
-                println("Go to the $name")
-                if (!truck.isEmpty) truck.unloading() else loadTruck(truck, name)
-                delay(1000)
-                if (check()) cancel()
-            }
-        }
+//        val unloadPoint2 = scope.launch {
+//            Depot.flow.collect { truck ->
+//                val name = "Unload point 2"
+//                println("Go to the $name")
+//                if (!truck.isEmpty) truck.unloading() else loadTruck(truck, name)
+//                delay(1000)
+//                if (check()) cancel()
+//            }
+//        }
+//
+//        val unloadPoint3 = scope.launch {
+//            Depot.flow.collect { truck ->
+//                val name = "Unload point 3"
+//                println("Go to the $name")
+//                if (!truck.isEmpty) truck.unloading() else loadTruck(truck, name)
+//                delay(1000)
+//                if (check()) cancel()
+//            }
+//        }
 
         val loadPoint = launch {
             for (a in channel)
@@ -44,6 +44,10 @@ fun main() {
             println("List of trucks in line:")
             loadTraffic.forEach {
                 println(it.name)
+                while (it.weight < it.maxWeight) {
+                    it.loading(notEdibleProducts[Random.nextInt(0, 11)])
+                }
+                println("${it.name} - ${it.goodsList}")
             }
             println("Done!")
         }
