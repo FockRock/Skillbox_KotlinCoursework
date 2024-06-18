@@ -12,31 +12,15 @@ fun main() {
             Depot.flow.collect { truck ->
                 val name = "Unload point 1"
                 println("Go to the $name")
-                if (!truck.isEmpty) truck.unloading() else loadTruck(truck, name)
+                if (!truck.isEmpty) truck.unloading() else {
+                    println("${truck.name} go to the traffic!")
+//                    traffic.add(truck)
+                    channel.send(truck)
+                }
                 delay(1000)
                 if (check()) cancel()
             }
         }
-
-//        val unloadPoint2 = scope.launch {
-//            Depot.flow.collect { truck ->
-//                val name = "Unload point 2"
-//                println("Go to the $name")
-//                if (!truck.isEmpty) truck.unloading() else loadTruck(truck, name)
-//                delay(1000)
-//                if (check()) cancel()
-//            }
-//        }
-//
-//        val unloadPoint3 = scope.launch {
-//            Depot.flow.collect { truck ->
-//                val name = "Unload point 3"
-//                println("Go to the $name")
-//                if (!truck.isEmpty) truck.unloading() else loadTruck(truck, name)
-//                delay(1000)
-//                if (check()) cancel()
-//            }
-//        }
 
         val loadPoint = launch {
             for (a in channel)
@@ -56,13 +40,13 @@ fun main() {
 
 
 val channel = Channel<Truck>()
-val traffic = mutableListOf<Truck>()
+//val traffic = mutableListOf<Truck>()
 suspend fun loadTruck(t: Truck, n: String) {
     val a = Random.nextInt(2)
     if (a == 0) {
         if (Warehouse.notEatableGoods.isEmpty()) {
             println("Go from the $n ${t.name} go to the traffic!")
-            traffic.add(t)
+//            traffic.add(t)
             channel.send(t)
         } else {
             while (t.weight < t.maxWeight && Warehouse.notEatableGoods.isNotEmpty() && Warehouse.notEatableGoods[0].weight < (t.maxWeight - t.weight))
@@ -71,7 +55,7 @@ suspend fun loadTruck(t: Truck, n: String) {
     } else if (a == 1) {
         if (Warehouse.eatableGoods.isEmpty()) {
             println("Go from the $n ${t.name} go to the traffic!")
-            traffic.add(t)
+//            traffic.add(t)
             channel.send(t)
         } else {
             while (t.weight < t.maxWeight && Warehouse.eatableGoods.isNotEmpty() && Warehouse.eatableGoods[0].weight < (t.maxWeight - t.weight))
