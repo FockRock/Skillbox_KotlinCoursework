@@ -27,11 +27,13 @@ fun main() {
                 loadTraffic.add(a)
             println("List of trucks in line:")
             loadTraffic.forEach {
-                println(it.name)
-                while (it.weight < it.maxWeight) {
-                    it.loading(notEdibleProducts[Random.nextInt(0, 11)])
-                }
-                println("${it.name} - ${it.goodsList}")
+                if (Warehouse.notEatableGoods.isNotEmpty()) {
+                    while (it.weight < it.maxWeight && Warehouse.notEatableGoods[0].weight < (it.maxWeight - it.weight))
+                        it.addGoods(Warehouse.notEatableGoods[0], false)
+                } else if (Warehouse.eatableGoods.isNotEmpty()) {
+                    while (it.weight < it.maxWeight && Warehouse.eatableGoods.isNotEmpty() && Warehouse.eatableGoods[0].weight < (it.maxWeight - it.weight))
+                        it.addGoods(Warehouse.eatableGoods[0], true)
+                } else println("${it.name} - ${it.goodsList}")
             }
             println("Done!")
         }
@@ -40,6 +42,7 @@ fun main() {
 
 
 val channel = Channel<Truck>()
+
 //val traffic = mutableListOf<Truck>()
 suspend fun loadTruck(t: Truck, n: String) {
     val a = Random.nextInt(2)
