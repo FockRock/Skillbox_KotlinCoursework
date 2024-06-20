@@ -28,7 +28,7 @@ fun main() {
             println("List of trucks in line:")
             loadTraffic.forEach {
                 if (Warehouse.notEatableGoods.isNotEmpty()) {
-                    while (it.weight < it.maxWeight && Warehouse.notEatableGoods[0].weight < (it.maxWeight - it.weight))
+                    while (it.weight < it.maxWeight && Warehouse.notEatableGoods.isNotEmpty() && Warehouse.notEatableGoods[0].weight < (it.maxWeight - it.weight))
                         it.addGoods(Warehouse.notEatableGoods[0], false)
                 } else if (Warehouse.eatableGoods.isNotEmpty()) {
                     while (it.weight < it.maxWeight && Warehouse.eatableGoods.isNotEmpty() && Warehouse.eatableGoods[0].weight < (it.maxWeight - it.weight))
