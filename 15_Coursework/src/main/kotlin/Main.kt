@@ -14,7 +14,6 @@ fun main() {
                 println("Go to the $name")
                 if (!truck.isEmpty) truck.unloading() else {
                     println("${truck.name} go to the traffic!")
-//                    traffic.add(truck)
                     channel.send(truck)
                 }
                 delay(1000)
@@ -22,7 +21,7 @@ fun main() {
             }
         }
 
-        val loadPoint = launch {
+        val loadPoint = scope.launch {
             for (a in channel)
                 loadTraffic.add(a)
             println("List of trucks in line:")
@@ -40,29 +39,7 @@ fun main() {
     }
 }
 
-
 val channel = Channel<Truck>()
-
-suspend fun loadTruck(t: Truck, n: String) {
-    val a = Random.nextInt(2)
-    if (a == 0) {
-        if (Warehouse.notEatableGoods.isEmpty()) {
-            println("Go from the $n ${t.name} go to the traffic!")
-            channel.send(t)
-        } else {
-            while (t.weight < t.maxWeight && Warehouse.notEatableGoods.isNotEmpty() && Warehouse.notEatableGoods[0].weight < (t.maxWeight - t.weight))
-                t.addGoods(Warehouse.notEatableGoods[0], false)
-        }
-    } else if (a == 1) {
-        if (Warehouse.eatableGoods.isEmpty()) {
-            println("Go from the $n ${t.name} go to the traffic!")
-            channel.send(t)
-        } else {
-            while (t.weight < t.maxWeight && Warehouse.eatableGoods.isNotEmpty() && Warehouse.eatableGoods[0].weight < (t.maxWeight - t.weight))
-                t.addGoods(Warehouse.eatableGoods[0], true)
-        }
-    }
-}
 
 fun check(): Boolean {
     val a = if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
@@ -75,3 +52,23 @@ fun check(): Boolean {
     } else false
     return a
 }
+//suspend fun loadTruck(t: Truck, n: String) {
+//    val a = Random.nextInt(2)
+//    if (a == 0) {
+//        if (Warehouse.notEatableGoods.isEmpty()) {
+//            println("Go from the $n ${t.name} go to the traffic!")
+//            channel.send(t)
+//        } else {
+//            while (t.weight < t.maxWeight && Warehouse.notEatableGoods.isNotEmpty() && Warehouse.notEatableGoods[0].weight < (t.maxWeight - t.weight))
+//                t.addGoods(Warehouse.notEatableGoods[0], false)
+//        }
+//    } else if (a == 1) {
+//        if (Warehouse.eatableGoods.isEmpty()) {
+//            println("Go from the $n ${t.name} go to the traffic!")
+//            channel.send(t)
+//        } else {
+//            while (t.weight < t.maxWeight && Warehouse.eatableGoods.isNotEmpty() && Warehouse.eatableGoods[0].weight < (t.maxWeight - t.weight))
+//                t.addGoods(Warehouse.eatableGoods[0], true)
+//        }
+//    }
+//}
