@@ -17,7 +17,7 @@ fun main() {
                     channel.send(truck)
                 }
                 delay(1000)
-                if (check()) cancel()
+//                if (check()) cancel()
             }
         }
 
@@ -35,6 +35,11 @@ fun main() {
                 } else println("${it.name} - ${it.goodsList}")
             }
             println("Done!")
+        }
+        scope.launch {
+            unloadPoint1.join()
+            delay(10000)
+            loadPoint.join()
         }
     }
 }
