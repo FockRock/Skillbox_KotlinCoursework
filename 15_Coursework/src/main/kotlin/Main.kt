@@ -11,13 +11,26 @@ fun main() {
         val unloadPoint1 = scope.launch {
             Depot.flow.collect { truck ->
                 val name = "Unload point 1"
-                println("Go to the $name")
+                println("${truck.name} go to the $name")
                 if (!truck.isEmpty) truck.unloading() else {
                     println("${truck.name} go to the traffic!")
                     channel.send(truck)
                 }
                 delay(1000)
-//                if (check()) cancel()
+                if (check()) cancel()
+            }
+        }
+
+        val unloadPoint2 = scope.launch {
+            Depot.flow.collect { truck ->
+                val name = "Unload point 22222222222222222"
+                println("${truck.name} go to the $name")
+                if (!truck.isEmpty) truck.unloading() else {
+                    println("${truck.name} go to the traffic!")
+                    channel.send(truck)
+                }
+                delay(1000)
+                if (check()) cancel()
             }
         }
 
@@ -36,10 +49,10 @@ fun main() {
             }
             println("Done!")
         }
+
         scope.launch {
             unloadPoint1.join()
-            delay(10000)
-            loadPoint.join()
+            unloadPoint2.join()
         }
     }
 }
@@ -47,7 +60,7 @@ fun main() {
 val channel = Channel<Truck>()
 
 fun check(): Boolean {
-    val a = if (smallTruckCount == 3 || mediumTruckCount == 3 || bigTruckCount == 3) {
+    val a = if (smallTruckCount == 5 || mediumTruckCount == 5 || bigTruckCount == 5) {
         println("Не съедобные товары на складе:")
         Warehouse.notEatableGoods.forEach { println(it.goodName) }
         println("Съедобные товары на складе:")

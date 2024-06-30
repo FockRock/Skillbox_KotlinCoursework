@@ -25,13 +25,13 @@ abstract class Truck(var maxWeight: Int, var name: String, var isEmpty: Boolean 
 
     suspend fun unloading() {
         while (goodsList.isNotEmpty()) {
-            println("${goodsList[0].goodName} unloading from $name!")
+//            println("${goodsList[0].goodName} unloading from $name!")
             delay(goodsList[0].time.toLong())
             if (goodsList[0].isEatable) Warehouse.eatableGoods.add(goodsList[0])
             else Warehouse.notEatableGoods.add(goodsList[0])
             weight -= goodsList[0].weight
             goodsList.removeAt(0)
-            println("Weight is - $weight")
+//            println("Weight is - $weight")
         }
         println("$name is Empty!")
     }
