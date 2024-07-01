@@ -34,7 +34,23 @@ fun main() {
             }
         }
 
-        val loadPoint = scope.launch {
+        val loadPoint1 = scope.launch {
+            for (a in channel)
+                loadTraffic.add(a)
+            println("List of trucks in line:")
+            loadTraffic.forEach {
+                if (Warehouse.notEatableGoods.isNotEmpty()) {
+                    while (it.weight < it.maxWeight && Warehouse.notEatableGoods.isNotEmpty() && Warehouse.notEatableGoods[0].weight < (it.maxWeight - it.weight))
+                        it.addGoods(Warehouse.notEatableGoods[0], false)
+                } else if (Warehouse.eatableGoods.isNotEmpty()) {
+                    while (it.weight < it.maxWeight && Warehouse.eatableGoods.isNotEmpty() && Warehouse.eatableGoods[0].weight < (it.maxWeight - it.weight))
+                        it.addGoods(Warehouse.eatableGoods[0], true)
+                } else println("${it.name} - ${it.goodsList}")
+            }
+            println("Done!")
+        }
+
+        val loadPoint2 = scope.launch {
             for (a in channel)
                 loadTraffic.add(a)
             println("List of trucks in line:")
