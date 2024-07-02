@@ -69,6 +69,8 @@ fun main() {
         scope.launch {
             unloadPoint1.join()
             unloadPoint2.join()
+            loadPoint1.join()
+            loadPoint2.join()
         }
     }
 }
