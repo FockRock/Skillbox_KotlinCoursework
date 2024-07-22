@@ -12,7 +12,7 @@ abstract class Truck(var maxWeight: Int, var name: String, var isEmpty: Boolean 
             weight += g.weight
             println("Total weight $weight")
             if (isEatable) Warehouse.eatableGoods.removeAt(0)
-            else Warehouse.notEatableGoods.removeAt(0)
+            else if (!isEatable) Warehouse.notEatableGoods.removeAt(0)
         }
     }
 
